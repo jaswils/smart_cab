@@ -11,6 +11,10 @@ class LearningAgent(Agent):
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
         # TODO: Initialize any additional variables here
+        self.q=dict()
+        self.alpha = 0.5
+        self.epsilon = 0.5
+        self.gamma = 0.5 
 
     def reset(self, destination=None):
         self.planner.route_to(destination)
@@ -23,7 +27,11 @@ class LearningAgent(Agent):
         deadline = self.env.get_deadline(self)
 
         # TODO: Update state
+        # Example inputs to choose from {'light': 'red', 'oncoming': None, 'right': None, 'left': None}
+        self.state=(self.next_waypoint, inputs['light'], deadline)
         
+
+
         # TODO: Select action according to your policy
         action = random.choice([None, 'forward', 'left', 'right'])
 
@@ -32,7 +40,11 @@ class LearningAgent(Agent):
 
         # TODO: Learn policy based on state, action, reward
 
-        print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs, action, reward)  # [debug]
+        #check if Q mapping is working
+        self.q[(self.state, action)] = reward + self.q.get((self.state, action),0)
+        print self.q 
+
+        #print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs, action, reward)  # [debug]
 
 
 def run():
