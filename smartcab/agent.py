@@ -12,14 +12,13 @@ class LearningAgent(Agent):
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
         # TODO: Initialize any additional variables here
-        self.potential_actions = ('left',  'forward',  'right', None)
+        self.potential_actions = ('left','forward',  None, 'right')
         
         self.q = dict()
-        self.alpha = 0.5
-        self.gamma = 0.7
+        self.alpha = 0.3
+        self.gamma = 0.9
         
         self.trial = 0
-        self.total_reward = 0
         self.deadline=0
         
 
@@ -27,11 +26,12 @@ class LearningAgent(Agent):
         self.planner.route_to(destination)
         # TODO: Prepare for a new trip; reset any variables here, if required
         
-        self.total_reward = 0
         self.trial += 1
-        
 
-        #Compute max Q(s',a')
+        for key in self.q:
+            print key, ': ', self.q[key]
+
+    #Compute max Q(s',a')
     def qmax(self, s):
         v= list()
 
@@ -40,7 +40,7 @@ class LearningAgent(Agent):
 
         return max(v) 
 
-        #Compute the action based on the argmax_a' (Q(s',a'))
+    #Compute the action based on the argmax_a' (Q(s',a'))
     def qargmax(self, s):
         v= list()
 
@@ -60,8 +60,15 @@ class LearningAgent(Agent):
         self.state_ = (self.next_waypoint, inputs['light'])
         
         # TODO: Select action according to your policy
-        epsilon = 1.0 / (self.trial/2 + 1.0)
+        epsilon = 1.0 / (self.trial + 1.0)
+
+        #Uncomment to always choose a random action
+        #epsilon = 1.0
+
+        #Uncomment to aways choose the best available action
         #epsilon = 0.0
+
+        # Choose action. Epsilon decays to move from exploration to exploitation.
         if (random.random() < epsilon):
             action = random.choice(self.potential_actions)
             print 'Random Action'
@@ -71,8 +78,9 @@ class LearningAgent(Agent):
 
         # Execute action and get reward
         reward = self.env.act(self, action)
-        self.total_reward += reward
-        print 'Deadline: ', self.deadline, ' Action: ', action, ' Reward: ', reward , 'State', self.state_       
+
+        # Print interation values
+        print 'Deadline: ', self.deadline, '| Action: ', action, '| Reward: ', reward , '| State', self.state_       
 
         # TODO: Learn policy based on state, action, reward
         
