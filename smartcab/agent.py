@@ -60,7 +60,7 @@ class LearningAgent(Agent):
         self.state_ = (self.next_waypoint, inputs['light'])
         
         # TODO: Select action according to your policy
-        epsilon = 1.0 / (self.trial + 1.0)
+        epsilon = 1.0 / (self.trial/10.0 + 1.0)
 
         #Uncomment to always choose a random action
         #epsilon = 1.0
