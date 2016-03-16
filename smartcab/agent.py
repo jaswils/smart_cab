@@ -14,10 +14,12 @@ class LearningAgent(Agent):
         # TODO: Initialize any additional variables here
         self.potential_actions = ('left','forward',  None, 'right')
         
+        #Initialize q variables
         self.q = dict()
         self.alpha = 0.3
         self.gamma = 0.9
         
+        #Initialize tracking variables 
         self.trial = 0
         self.deadline=0
         
@@ -95,10 +97,6 @@ class LearningAgent(Agent):
 
         #print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs, action, reward)  # [debug]
 
-
-
-
-
 def run():
     """Run the agent for a finite number of trials."""
 
@@ -110,7 +108,6 @@ def run():
     # Now simulate it
     sim = Simulator(e, update_delay=.001)  # reduce update_delay to speed up simulation
     sim.run(n_trials=100)  # press Esc or close pygame window to quit
-
 
 if __name__ == '__main__':
     run()
